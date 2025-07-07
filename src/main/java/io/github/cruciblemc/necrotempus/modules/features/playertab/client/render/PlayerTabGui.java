@@ -278,7 +278,7 @@ public class PlayerTabGui extends Gui {
                 minecraft.mcProfiler.endSection();
 
                 minecraft.mcProfiler.startSection("playerName");
-                minecraft.fontRenderer.drawStringWithShadow(cell.getDisplayName().getFormattedText(), minX, minY, -1);
+                minecraft.fontRenderer.drawStringWithShadow(cell.getDisplayName().getFormattedText().length().toString(), minX, minY, -1);
                 minecraft.mcProfiler.endSection();
 
                 minecraft.mcProfiler.startSection("drawScoreboardValues");
