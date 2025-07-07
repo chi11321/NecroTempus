@@ -3,7 +3,7 @@ name: Pre-release build
 on:
   push:
     branches:
-      - master
+      - 1.3.2-dev
 
 permissions:
   contents: write
