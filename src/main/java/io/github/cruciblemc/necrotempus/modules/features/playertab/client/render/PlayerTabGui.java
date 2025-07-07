@@ -271,8 +271,7 @@ public class PlayerTabGui extends Gui {
                     cells.get(currentCell)
             );
 
-            GameProfile profile = cell.getSkullProfile();
-            if (profile == null || profile.getName() == null || profile.getName().trim().isEmpty()) {
+            if (cell.getPlayerPing() > 5000) {
                 continue;
             }
 
