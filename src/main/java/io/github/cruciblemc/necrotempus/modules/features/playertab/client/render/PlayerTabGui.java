@@ -392,7 +392,7 @@ public class PlayerTabGui extends Gui {
     }
 
     private static final HashSet<String> DOWNLOADING_SKINS = new HashSet<>();
-    private static SkinProvider skinProvider;
+    // private static SkinProvider skinProvider;
     private static Constructor<MinecraftProfileTexture> constructor = null;
 
     @SneakyThrows
@@ -403,12 +403,12 @@ public class PlayerTabGui extends Gui {
 
         if (gameProfile != null) {
 
-            if (NecroTempusConfig.enableSkinPortCompat && Loader.isModLoaded("skinport") && skinProvider == null) {
-                skinProvider = (profile -> Hooks.GuiPlayerTabOverlay_bindTexture(profile, locationStevePng));
-            }
+            // if (NecroTempusConfig.enableSkinPortCompat && Loader.isModLoaded("skinport") && skinProvider == null) {
+            //     skinProvider = (profile -> Hooks.GuiPlayerTabOverlay_bindTexture(profile, locationStevePng));
+            // }
 
-            if (skinProvider != null)
-                return skinProvider.getSkin(gameProfile);
+            // if (skinProvider != null)
+            //     return skinProvider.getSkin(gameProfile);
 
             if (NecroTempusConfig.enableHeadsFallback && NecroTempusConfig.headsFallbackURL != null && !NecroTempusConfig.headsFallbackURL.isEmpty()) {
 
