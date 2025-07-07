@@ -272,7 +272,7 @@ public class PlayerTabGui extends Gui {
             );
 
             GameProfile profile = cell.getSkullProfile();
-            if (profile == null || profile.getId() == null || profile.getName() == null || profile.getName().trim().isEmpty()) {
+            if (profile == null || profile.getName() == null || profile.getName().trim().isEmpty()) {
                 continue;
             }
 
