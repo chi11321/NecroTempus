@@ -271,7 +271,8 @@ public class PlayerTabGui extends Gui {
                     cells.get(currentCell)
             );
 
-            if (!cell.getSkullProfile().getName().trim().isEmpty()) {
+            GameProfile profile = cell.getSkullProfile();
+            if (profile != null && profile.getName() != null && !profile.getName().trim().isEmpty()) {
                 minecraft.mcProfiler.startSection("drawPlayerHead");
                 if (drawPlayerHeads)
                     minX = drawPlayerHead(minX, minY, cell);
