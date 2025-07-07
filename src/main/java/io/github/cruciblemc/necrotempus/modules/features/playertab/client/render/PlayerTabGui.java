@@ -271,27 +271,30 @@ public class PlayerTabGui extends Gui {
                     cells.get(currentCell)
             );
 
-            if (cell.getPlayerPing() < 1000) {
-                minecraft.mcProfiler.startSection("drawPlayerHead");
-                if (drawPlayerHeads)
-                    minX = drawPlayerHead(minX, minY, cell);
-                minecraft.mcProfiler.endSection();
-
-                minecraft.mcProfiler.startSection("playerName");
-                minecraft.fontRenderer.drawStringWithShadow(cell.getDisplayName().getFormattedText(), minX, minY, -1);
-                minecraft.mcProfiler.endSection();
-
-                minecraft.mcProfiler.startSection("drawScoreboardValues");
-                int textEndX, scoreboardEndX;
-                if (cell.isDisplayScore() && (scoreboardEndX = (textEndX = minX + maxTextWidth + 1) + maxScoreboardScoreWidth) - textEndX > 5)
-                    drawScoreboardValues(worldScoreboardObjective, minY, scoreboardEndX, cell);
-                minecraft.mcProfiler.endSection();
-
-                minecraft.mcProfiler.startSection("drawPing");
-                drawPing(maxCellSize, minX - (drawPlayerHeads ? 9 : 0), minY, cell);
-                minecraft.mcProfiler.endSection();
-                minecraft.mcProfiler.endSection();
+            GameProfile profile = cell.getSkullProfile();
+            if (profile == null || profile.getId() == null || profile.getName() == null || profile.getName().trim().isEmpty()) {
+                return;
             }
+
+            minecraft.mcProfiler.startSection("drawPlayerHead");
+            if (drawPlayerHeads)
+                minX = drawPlayerHead(minX, minY, cell);
+            minecraft.mcProfiler.endSection();
+
+            minecraft.mcProfiler.startSection("playerName");
+            minecraft.fontRenderer.drawStringWithShadow(cell.getDisplayName().getFormattedText(), minX, minY, -1);
+            minecraft.mcProfiler.endSection();
+
+            minecraft.mcProfiler.startSection("drawScoreboardValues");
+            int textEndX, scoreboardEndX;
+            if (cell.isDisplayScore() && (scoreboardEndX = (textEndX = minX + maxTextWidth + 1) + maxScoreboardScoreWidth) - textEndX > 5)
+                drawScoreboardValues(worldScoreboardObjective, minY, scoreboardEndX, cell);
+            minecraft.mcProfiler.endSection();
+
+            minecraft.mcProfiler.startSection("drawPing");
+            drawPing(maxCellSize, minX - (drawPlayerHeads ? 9 : 0), minY, cell);
+            minecraft.mcProfiler.endSection();
+            minecraft.mcProfiler.endSection();
         }
 
     }
