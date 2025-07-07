@@ -273,7 +273,7 @@ public class PlayerTabGui extends Gui {
 
             GameProfile profile = cell.getSkullProfile();
             if (profile == null || profile.getId() == null || profile.getName() == null || profile.getName().trim().isEmpty()) {
-                return;
+                continue;
             }
 
             minecraft.mcProfiler.startSection("drawPlayerHead");
