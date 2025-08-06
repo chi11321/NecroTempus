@@ -22,6 +22,7 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
@@ -273,7 +274,8 @@ public class PlayerTabGui extends Gui {
                     cells.get(currentCell)
             );
 
-            if (cell.getPlayerPing() > 5000) {
+            // placeholder
+            if (cell.getPlayerPing() == 9999) {
                 continue;
             }
 
@@ -405,6 +407,8 @@ public class PlayerTabGui extends Gui {
         if (gameProfile == null || gameProfile.getName() == null) {
             return fallbackSkin;
         }
+
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("正在获取皮肤: " + username));
 
         String username = gameProfile.getName();
         ResourceLocation skinLoc = new ResourceLocation("skins/" + username.toLowerCase());
