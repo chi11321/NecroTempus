@@ -75,6 +75,8 @@ public class DefaultPlayerTab extends PlayerTab {
             tabCells.add(new TabCell(
                     new ChatComponentText(PlayerTabGui.getFormattedPlayerName(guiPlayerInfo.name, minecraft)),
                     guiPlayerInfo.name,
+                    guiPlayerInfo.name,
+                    gameProfile.getId(),
                     gameProfile,
                     true,
                     guiPlayerInfo.responseTime
