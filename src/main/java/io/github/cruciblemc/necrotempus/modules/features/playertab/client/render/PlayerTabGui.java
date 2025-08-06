@@ -314,7 +314,7 @@ public class PlayerTabGui extends Gui {
     private int drawPlayerHead(int minX, int minY, TabCell cell) {
         String linkedUserName = cell.getLinkedUserName();
         GameProfile profile = new GameProfile(UUID.nameUUIDFromBytes(linkedUserName.getBytes(StandardCharsets.UTF_8)), linkedUserName);
-        
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("正在获取皮肤: " + linkedUserName + ", uuid:" + UUID.nameUUIDFromBytes(linkedUserName.getBytes(StandardCharsets.UTF_8))));
         ResourceLocation texture = getPlayerSkin(profile);
 
 //        float height = 32F;
