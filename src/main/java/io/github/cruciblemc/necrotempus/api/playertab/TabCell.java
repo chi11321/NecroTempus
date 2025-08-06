@@ -1,5 +1,8 @@
 package io.github.cruciblemc.necrotempus.api.playertab;
 
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+
 import com.mojang.authlib.GameProfile;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.client.Minecraft;
 
 @Getter
 @AllArgsConstructor
@@ -25,6 +29,7 @@ public class TabCell {
     private int playerPing;
 
     public static TabCell fromNBT(NBTTagCompound tagCompound) {
+        Minecraft.getMinecraft().thePlayer.addChatMessage(tagCompound.toString());
         return new TabCell(
                 new ChatComponentText(tagCompound.getString("displayName")),
                 tagCompound.getString("linkedUserName"),
