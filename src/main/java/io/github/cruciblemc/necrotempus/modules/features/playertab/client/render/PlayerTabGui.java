@@ -1,6 +1,5 @@
 package io.github.cruciblemc.necrotempus.modules.features.playertab.client.render;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import io.github.cruciblemc.necrotempus.NecroTempusConfig;
@@ -312,7 +311,7 @@ public class PlayerTabGui extends Gui {
     }
 
     private int drawPlayerHead(int minX, int minY, TabCell cell) {
-        ResourceLocation texture = getPlayerSkin(cell.getSkullProfile());
+        ResourceLocation texture = getPlayerSkin(cell.getDisplayName().getUnformattedText());
 
 //        float height = 32F;
 //
@@ -401,15 +400,15 @@ public class PlayerTabGui extends Gui {
 
     @SneakyThrows
     @SuppressWarnings("rawtypes")
-    public ResourceLocation getPlayerSkin(GameProfile gameProfile) {
+    public ResourceLocation getPlayerSkin(String username) {
         ResourceLocation fallbackSkin = locationStevePng;
 
-        if (gameProfile == null || gameProfile.getName() == null) {
+        if (username == null || username.isEmpty()) {
             return fallbackSkin;
         }
-
-        String username = gameProfile.getName();
+        
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("正在获取皮肤: " + username));
+
         ResourceLocation skinLoc = new ResourceLocation("skins/" + username.toLowerCase());
 
         if (DOWNLOADING_SKINS.contains(username)) {
