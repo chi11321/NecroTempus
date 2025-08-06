@@ -278,10 +278,12 @@ public class PlayerTabGui extends Gui {
                 continue;
             }
 
-            minecraft.mcProfiler.startSection("drawPlayerHead");
-            if (drawPlayerHeads)
-                minX = drawPlayerHead(minX, minY, cell);
-            minecraft.mcProfiler.endSection();
+            if (cell.getPlayerPing() != 0) {
+                minecraft.mcProfiler.startSection("drawPlayerHead");
+                if (drawPlayerHeads)
+                    minX = drawPlayerHead(minX, minY, cell);
+                minecraft.mcProfiler.endSection();
+            }
 
             minecraft.mcProfiler.startSection("playerName");
             minecraft.fontRenderer.drawStringWithShadow(cell.getDisplayName().getFormattedText(), minX, minY, -1);
@@ -311,7 +313,7 @@ public class PlayerTabGui extends Gui {
     }
 
     private int drawPlayerHead(int minX, int minY, TabCell cell) {
-        ResourceLocation texture = getPlayerSkin(cell.getDisplayName().getUnformattedText());
+        ResourceLocation texture = getPlayerSkin(cell.getLinkedUserName());
 
 //        float height = 32F;
 //
