@@ -1,19 +1,21 @@
 package io.github.cruciblemc.necrotempus.modules.features.playertab.client.render;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.realmsclient.gui.ChatFormatting;
+import cpw.mods.fml.common.Loader;
 import io.github.cruciblemc.necrotempus.NecroTempusConfig;
 import io.github.cruciblemc.necrotempus.api.playertab.PlayerTab;
 import io.github.cruciblemc.necrotempus.api.playertab.TabCell;
 import io.github.cruciblemc.necrotempus.modules.features.playertab.client.ClientPlayerTabManager;
 import io.github.cruciblemc.necrotempus.modules.features.playertab.client.DefaultPlayerTab;
 import io.github.cruciblemc.necrotempus.utils.SkinProvider;
+import lain.mods.skinport.init.forge.asm.Hooks;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
@@ -21,17 +23,15 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static net.minecraft.client.entity.AbstractClientPlayer.locationStevePng;
 import static net.minecraft.scoreboard.IScoreObjectiveCriteria.health;
@@ -273,7 +273,6 @@ public class PlayerTabGui extends Gui {
                     cells.get(currentCell)
             );
 
-            // placeholder
             if (cell.getPlayerPing() == 9999) {
                 continue;
             }
@@ -313,7 +312,10 @@ public class PlayerTabGui extends Gui {
     }
 
     private int drawPlayerHead(int minX, int minY, TabCell cell) {
-        ResourceLocation texture = getPlayerSkin(cell.getLinkedUserName());
+        String linkedUserName = cell.getLinkedUserName();
+        GameProfile profile = new GameProfile(UUID.nameUUIDFromBytes(linkedUserName.getBytes(StandardCharsets.UTF_8)), linkedUserName);
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("正在获取皮肤: " + username + ", uuid:" + UUID.nameUUIDFromBytes(linkedUserName.getBytes(StandardCharsets.UTF_8))));
+        ResourceLocation texture = getPlayerSkin(profile);
 
 //        float height = 32F;
 //
@@ -402,77 +404,73 @@ public class PlayerTabGui extends Gui {
 
     @SneakyThrows
     @SuppressWarnings("rawtypes")
-    public ResourceLocation getPlayerSkin(String username) {
-        ResourceLocation fallbackSkin = locationStevePng;
+    public ResourceLocation getPlayerSkin(GameProfile gameProfile) {
 
-        if (username == null || username.isEmpty()) {
-            return fallbackSkin;
-        }
-        
-        ResourceLocation skinLoc = new ResourceLocation("skins/" + username.toLowerCase());
+        ResourceLocation resourcelocation = locationStevePng;
 
-        if (DOWNLOADING_SKINS.contains(username)) {
-            return skinLoc;
-        }
+        if (gameProfile != null) {
 
-        DOWNLOADING_SKINS.add(username);
-
-        new Thread(() -> {
-            try {
-                URL uuidUrl = new URL("https://api.mojang.com/users/profiles/minecraft/" + username);
-                HttpURLConnection uuidConn = (HttpURLConnection) uuidUrl.openConnection();
-                uuidConn.setRequestMethod("GET");
-
-                if (uuidConn.getResponseCode() != 200) {
-                    DOWNLOADING_SKINS.remove(username);
-                    return;
-                }
-
-                BufferedReader uuidReader = new BufferedReader(new InputStreamReader(uuidConn.getInputStream()));
-                StringBuilder uuidResponse = new StringBuilder();
-                String line;
-                while ((line = uuidReader.readLine()) != null) {
-                    uuidResponse.append(line);
-                }
-                uuidReader.close();
-
-                String uuid = uuidResponse.toString().split("\"id\":\"")[1].split("\"")[0];
-
-                URL profileUrl = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
-                HttpURLConnection profileConn = (HttpURLConnection) profileUrl.openConnection();
-                profileConn.setRequestMethod("GET");
-
-                if (profileConn.getResponseCode() != 200) {
-                    DOWNLOADING_SKINS.remove(username);
-                    return;
-                }
-
-                BufferedReader profileReader = new BufferedReader(new InputStreamReader(profileConn.getInputStream()));
-                StringBuilder profileResponse = new StringBuilder();
-                while ((line = profileReader.readLine()) != null) {
-                    profileResponse.append(line);
-                }
-                profileReader.close();
-
-                String base64 = profileResponse.toString().split("\"value\":\"")[1].split("\"")[0];
-                String decoded = new String(Base64.getDecoder().decode(base64), "UTF-8");
-
-                String skinUrl = decoded.split("\"SKIN\":\\{\"url\":\"")[1].split("\"")[0];
-
-                BufferedImage image = ImageIO.read(new URL(skinUrl));
-                if (image != null) {
-                    DynamicTexture texture = new DynamicTexture(image);
-                    minecraft.getTextureManager().loadTexture(skinLoc, texture);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                DOWNLOADING_SKINS.remove(username);
+            if (NecroTempusConfig.enableSkinPortCompat && Loader.isModLoaded("skinport") && skinProvider == null) {
+                skinProvider = (profile -> Hooks.GuiPlayerTabOverlay_bindTexture(profile, locationStevePng));
             }
-        }).start();
 
-        return skinLoc;
+            if (skinProvider != null)
+                return skinProvider.getSkin(gameProfile);
+
+            if (NecroTempusConfig.enableHeadsFallback && NecroTempusConfig.headsFallbackURL != null && !NecroTempusConfig.headsFallbackURL.isEmpty()) {
+
+                String url = NecroTempusConfig.headsFallbackURL.replaceAll("%name%", gameProfile.getName());
+
+                if (gameProfile.getId() != null) {
+                    url = url.replaceAll("%uuid%", gameProfile.getId().toString()).replaceAll("%uuidTrim%", gameProfile.getId().toString().replaceAll("-", ""));
+                }
+
+                if (DOWNLOADING_SKINS.contains(url))
+                    return locationStevePng;
+
+
+                if(constructor == null){
+                    try{
+                        constructor = MinecraftProfileTexture.class.getConstructor(String.class);
+                    }catch (Exception ignored){
+                        try{
+                            constructor = MinecraftProfileTexture.class.getConstructor(String.class, Map.class);
+                        }catch (Exception ignored2){}
+                    }
+                }
+
+                MinecraftProfileTexture skin = null;
+
+
+                if(constructor != null){
+                    if(constructor.getParameterCount() == 1){
+                        skin = constructor.newInstance(url);
+                    }else{
+                        skin = constructor.newInstance(url, (Map) null);
+                    }
+                }
+
+                if(skin != null){
+                    DOWNLOADING_SKINS.add(url);
+
+                    String finalUrl = url;
+                    return minecraft.func_152342_ad().func_152789_a(skin, MinecraftProfileTexture.Type.SKIN, (skinPart, skinLoc) -> DOWNLOADING_SKINS.remove(finalUrl));
+                }
+            }
+
+            try {
+
+                Map profile = minecraft.func_152342_ad().func_152788_a(gameProfile);
+                MinecraftProfileTexture skin = (profile != null) ? (MinecraftProfileTexture) profile.getOrDefault(MinecraftProfileTexture.Type.SKIN, null) : null;
+
+                resourcelocation = minecraft.func_152342_ad().func_152792_a(skin, MinecraftProfileTexture.Type.SKIN);
+
+            } catch (Exception ignored) {
+            }
+
+        }
+
+        return resourcelocation;
     }
 
     public static String getFormattedPlayerName(String name, Minecraft minecraft) {
