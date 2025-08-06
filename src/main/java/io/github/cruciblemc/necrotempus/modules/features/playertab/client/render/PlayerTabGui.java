@@ -407,8 +407,6 @@ public class PlayerTabGui extends Gui {
             return fallbackSkin;
         }
         
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("正在获取皮肤: " + username));
-
         ResourceLocation skinLoc = new ResourceLocation("skins/" + username.toLowerCase());
 
         if (DOWNLOADING_SKINS.contains(username)) {
