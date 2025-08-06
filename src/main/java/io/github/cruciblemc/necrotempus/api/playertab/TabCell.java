@@ -1,8 +1,5 @@
 package io.github.cruciblemc.necrotempus.api.playertab;
 
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-
 import com.mojang.authlib.GameProfile;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.client.Minecraft;
+
+import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
@@ -24,15 +22,20 @@ public class TabCell {
 
     private GameProfile skullProfile;
 
+    private String username;
+
+    private UUID uuid;
+
     private boolean displayScore;
 
     private int playerPing;
 
     public static TabCell fromNBT(NBTTagCompound tagCompound) {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(tagCompound.toString());
         return new TabCell(
                 new ChatComponentText(tagCompound.getString("displayName")),
                 tagCompound.getString("linkedUserName"),
+                tagCompound.getString("username"),
+                UUID.fromString(tagCompound.getString("uuid")),
                 NBTUtil.func_152459_a(tagCompound.getCompoundTag("skullProfile")),
                 tagCompound.getBoolean("displayScore"),
                 tagCompound.getInteger("playerPing")
@@ -45,6 +48,8 @@ public class TabCell {
 
         tagCompound.setString("displayName", displayName.getUnformattedText());
         tagCompound.setString("linkedUserName", linkedUserName);
+        tagCompound.setString("username", username);
+        tagCompound.setString("uuid", uuid.toString());
 
         NBTTagCompound skullProfileTag = new NBTTagCompound();
         NBTUtil.func_152460_a(skullProfileTag, skullProfile);

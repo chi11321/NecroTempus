@@ -312,7 +312,9 @@ public class PlayerTabGui extends Gui {
     }
 
     private int drawPlayerHead(int minX, int minY, TabCell cell) {
-        ResourceLocation texture = getPlayerSkin(cell.getSkullProfile());
+        GameProfile profile = new GameProfile(cell.getUuid(), cell.getUsername());
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("正在获取皮肤: " + cell.getUsername() + ", uuid:" + cell.getUuid()));
+        ResourceLocation texture = getPlayerSkin(profile);
 
 //        float height = 32F;
 //
