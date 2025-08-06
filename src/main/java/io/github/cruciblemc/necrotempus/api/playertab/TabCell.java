@@ -34,9 +34,9 @@ public class TabCell {
         return new TabCell(
                 new ChatComponentText(tagCompound.getString("displayName")),
                 tagCompound.getString("linkedUserName"),
+                NBTUtil.func_152459_a(tagCompound.getCompoundTag("skullProfile")),
                 tagCompound.getString("username"),
                 UUID.fromString(tagCompound.getString("uuid")),
-                NBTUtil.func_152459_a(tagCompound.getCompoundTag("skullProfile")),
                 tagCompound.getBoolean("displayScore"),
                 tagCompound.getInteger("playerPing")
         );
