@@ -269,20 +269,20 @@ public class PlayerTabGui extends Gui {
 
             if (cellCount >= cells.size()) continue;
 
-            TabCell cell = enforceDisplayName(
-                    cells.get(currentCell)
-            );
+            TabCell c = cells.get(currentCell);
 
-            if (cell == null || cell.getPlayerPing() == 9999) {
+            if (c == null) continue;
+
+            TabCell cell = enforceDisplayName(c);
+
+            if (cell.getPlayerPing() == 9999) {
                 continue;
             }
 
-            if (cell.getPlayerPing() != 0) {
-                minecraft.mcProfiler.startSection("drawPlayerHead");
-                if (drawPlayerHeads)
-                    minX = drawPlayerHead(minX, minY, cell);
-                minecraft.mcProfiler.endSection();
-            }
+            minecraft.mcProfiler.startSection("drawPlayerHead");
+            if (drawPlayerHeads)
+                minX = drawPlayerHead(minX, minY, cell);
+            minecraft.mcProfiler.endSection();
 
             minecraft.mcProfiler.startSection("playerName");
             minecraft.fontRenderer.drawStringWithShadow(cell.getDisplayName().getFormattedText(), minX, minY, -1);
