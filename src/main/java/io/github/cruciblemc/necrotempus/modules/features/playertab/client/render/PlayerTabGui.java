@@ -244,6 +244,7 @@ public class PlayerTabGui extends Gui {
     }
 
     private void drawTabCells(List<TabCell> cells, int maxTextWidth, int maxScoreboardScoreWidth, int cellsCount, int lastColumnCellCount, int maxCellSize, int startCellXDrawPosition, int currentYDrawPosition) {
+        int realSize = cells.size();
 
         for (int currentCell = 0; currentCell < cellsCount; ++currentCell) {
 
@@ -269,11 +270,9 @@ public class PlayerTabGui extends Gui {
 
             if (cellCount >= cells.size()) continue;
 
-            TabCell c = cells.get(currentCell);
+            if (currentCell >= realSize) continue;
 
-            if (c == null) continue;
-
-            TabCell cell = enforceDisplayName(c);
+            TabCell cell = enforceDisplayName(ccells.get(currentCell));
 
             if (cell.getPlayerPing() == 9999) {
                 continue;
