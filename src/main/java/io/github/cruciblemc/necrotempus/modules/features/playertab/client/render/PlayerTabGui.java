@@ -110,7 +110,7 @@ public class PlayerTabGui extends Gui {
         int maxTextWidth = maxWidths[0];
         int maxScoreboardScoreWidth = maxWidths[1];
 
-        int cellsCount = cells.size();
+        int cellsCount = Math.max(cells.size(), 45);
         int lastColumnCellCount = cellsCount;
         int columnCount = 1;
 
@@ -273,7 +273,7 @@ public class PlayerTabGui extends Gui {
                     cells.get(currentCell)
             );
 
-            if (cell.getPlayerPing() == 9999) {
+            if (cell == null || cell.getPlayerPing() == 9999) {
                 continue;
             }
 
