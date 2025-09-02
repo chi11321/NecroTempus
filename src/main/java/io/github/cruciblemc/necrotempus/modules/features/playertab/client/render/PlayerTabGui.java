@@ -364,7 +364,6 @@ public class PlayerTabGui extends Gui {
         drawTexturedModalRect(minX + maxCellSize - 11, minY, 0, 176 + (pingStatusIcon * 8), 10, 8);
         GL11.glPopMatrix();
         zLevel -= 100.0F;
-        return;
 
         int[] color = new int[]{-16711936, -256, -14336, -65536, -8355712, -1};
         String ping = tabCell.getPlayerPing() + "ms";
