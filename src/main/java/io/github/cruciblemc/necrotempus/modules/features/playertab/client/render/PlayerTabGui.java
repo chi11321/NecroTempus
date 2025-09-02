@@ -272,7 +272,7 @@ public class PlayerTabGui extends Gui {
 
             if (currentCell >= realSize) continue;
 
-            TabCell cell = enforceDisplayName(ccells.get(currentCell));
+            TabCell cell = enforceDisplayName(cells.get(currentCell));
 
             if (cell.getPlayerPing() == 9999) {
                 continue;
