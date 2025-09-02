@@ -311,8 +311,7 @@ public class PlayerTabGui extends Gui {
     }
 
     private int drawPlayerHead(int minX, int minY, TabCell cell) {
-        GameProfile profile = new GameProfile(cell.getUuid(), cell.getUsername());
-        ResourceLocation texture = getPlayerSkin(profile);
+        ResourceLocation texture = getPlayerSkin(cell.getSkullProfile());
 
 //        float height = 32F;
 //
@@ -357,18 +356,15 @@ public class PlayerTabGui extends Gui {
                                 )
                         )
         );
+ 
+        minecraft.getTextureManager().bindTexture(icons);
 
-
-        if (!NecroTempusConfig.drawNumberedPing) {
-            minecraft.getTextureManager().bindTexture(icons);
-
-            zLevel += 100.0F;
-            GL11.glPushMatrix();
-            drawTexturedModalRect(minX + maxCellSize - 11, minY, 0, 176 + (pingStatusIcon * 8), 10, 8);
-            GL11.glPopMatrix();
-            zLevel -= 100.0F;
-            return;
-        }
+        zLevel += 100.0F;
+        GL11.glPushMatrix();
+        drawTexturedModalRect(minX + maxCellSize - 11, minY, 0, 176 + (pingStatusIcon * 8), 10, 8);
+        GL11.glPopMatrix();
+        zLevel -= 100.0F;
+        return;
 
         int[] color = new int[]{-16711936, -256, -14336, -65536, -8355712, -1};
         String ping = tabCell.getPlayerPing() + "ms";
