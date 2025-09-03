@@ -6,11 +6,16 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.github.cruciblemc.necrotempus.modules.features.playertab.client.ClientPlayerTabManager;
+import cpw.mods.fml.common.FMLLog;
+import java.util.logging.Level;
 
 public class PlayerTabPacketHandler implements IMessageHandler<PlayerTabPacket, IMessage> {
 
     @Override
     public IMessage onMessage(PlayerTabPacket message, MessageContext ctx) {
+        FMLLog.log(Level.INFO, "[PlayerTabPacket] 收到包: 类型=%s, 数据=%s", 
+            message.getPacketType(), message.getComponent());
+
         handleBossBar(message);
         return null;
     }
