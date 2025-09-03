@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DefaultPlayerTab extends PlayerTab {
 
@@ -83,14 +84,15 @@ public class DefaultPlayerTab extends PlayerTab {
                     true,
                     guiPlayerInfo.responseTime
             ));
+            UUID uuid = gameProfile.getId();
             FMLLog.log(Level.INFO,
-                "[TabCell] 添加玩家: name=%s, formattedName=%s, uuid=%s, ping=%d",
-                new Object[]{
-                    guiPlayerInfo.name,
-                    PlayerTabGui.getFormattedPlayerName(guiPlayerInfo.name, minecraft),
-                    uuid != null ? uuid.toString() : "null",
-                    guiPlayerInfo.responseTime
-                });
+                    "[TabCell] 添加玩家: name=%s, formattedName=%s, uuid=%s, ping=%d",
+                    new Object[]{
+                            guiPlayerInfo.name,
+                            PlayerTabGui.getFormattedPlayerName(guiPlayerInfo.name, minecraft),
+                            uuid != null ? uuid.toString() : "null",
+                            guiPlayerInfo.responseTime
+                    });
         }
 
         cachedList = tabCells;
