@@ -52,7 +52,6 @@ public class DefaultPlayerTab extends PlayerTab {
             if (time <= 250 && cachedList != null)
                 return cachedList;
         }
-        FMLLog.log(Level.INFO, "更新TabList1");
 
         lastCellsUpdate = System.currentTimeMillis();
 
@@ -84,8 +83,15 @@ public class DefaultPlayerTab extends PlayerTab {
                     true,
                     guiPlayerInfo.responseTime
             ));
+            FMLLog.log(Level.INFO,
+                    "[TabCell] 添加玩家: name=%s, formattedName=%s, uuid=%s, ping=%d",
+                    new Object[]{
+                            guiPlayerInfo.name,
+                            PlayerTabGui.getFormattedPlayerName(guiPlayerInfo.name, minecraft),
+                            gameProfile.getId().toString(),
+                            guiPlayerInfo.responseTime
+                    });
         }
-        FMLLog.log(Level.INFO, "更新TabList2");
 
         cachedList = tabCells;
         return tabCells;
