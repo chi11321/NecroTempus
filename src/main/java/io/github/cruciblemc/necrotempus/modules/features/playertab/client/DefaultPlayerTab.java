@@ -11,6 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.StringUtils;
+import cpw.mods.fml.common.FMLLog;
+import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class DefaultPlayerTab extends PlayerTab {
             if (time <= 250 && cachedList != null)
                 return cachedList;
         }
+        FMLLog.log(Level.INFO, "更新TabList1");
 
         lastCellsUpdate = System.currentTimeMillis();
 
@@ -82,6 +85,7 @@ public class DefaultPlayerTab extends PlayerTab {
                     guiPlayerInfo.responseTime
             ));
         }
+        FMLLog.log(Level.INFO, "更新TabList2");
 
         cachedList = tabCells;
         return tabCells;
