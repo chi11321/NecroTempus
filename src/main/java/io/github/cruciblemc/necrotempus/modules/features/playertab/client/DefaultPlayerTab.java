@@ -84,13 +84,13 @@ public class DefaultPlayerTab extends PlayerTab {
                     guiPlayerInfo.responseTime
             ));
             FMLLog.log(Level.INFO,
-                    "[TabCell] 添加玩家: name=%s, formattedName=%s, uuid=%s, ping=%d",
-                    new Object[]{
-                            guiPlayerInfo.name,
-                            PlayerTabGui.getFormattedPlayerName(guiPlayerInfo.name, minecraft),
-                            gameProfile.getId().toString(),
-                            guiPlayerInfo.responseTime
-                    });
+                "[TabCell] 添加玩家: name=%s, formattedName=%s, uuid=%s, ping=%d",
+                new Object[]{
+                    guiPlayerInfo.name,
+                    PlayerTabGui.getFormattedPlayerName(guiPlayerInfo.name, minecraft),
+                    uuid != null ? uuid.toString() : "null",
+                    guiPlayerInfo.responseTime
+                });
         }
 
         cachedList = tabCells;
