@@ -62,6 +62,9 @@ public class DefaultPlayerTab extends PlayerTab {
 
         NetHandlerPlayClientNT handlerWrapper = NetHandlerPlayClientNT.of(minecraft.thePlayer.sendQueue);
 
+        FMLLog.log(Level.INFO,
+                "玩家数量: %d",
+                handlerWrapper.getOrderedServerPlayers().size());
         for (GuiPlayerInfo guiPlayerInfo : handlerWrapper.getOrderedServerPlayers()) {
 
             EntityPlayer entityPlayer = minecraft.theWorld.getPlayerEntityByName(guiPlayerInfo.name);
@@ -86,13 +89,8 @@ public class DefaultPlayerTab extends PlayerTab {
             ));
             UUID uuid = gameProfile.getId();
             FMLLog.log(Level.INFO,
-                    "[TabCell] 添加玩家: name=%s, formattedName=%s, uuid=%s, ping=%d",
-                    new Object[]{
-                            guiPlayerInfo.name,
-                            PlayerTabGui.getFormattedPlayerName(guiPlayerInfo.name, minecraft),
-                            uuid != null ? uuid.toString() : "null",
-                            guiPlayerInfo.responseTime
-                    });
+                    "延迟: %d",
+                    guiPlayerInfo.responseTime);
         }
 
         cachedList = tabCells;
