@@ -274,10 +274,6 @@ public class PlayerTabGui extends Gui {
 
             TabCell cell = enforceDisplayName(cells.get(currentCell));
 
-            if (cell.getPlayerPing() == 9999) {
-                continue;
-            }
-
             minecraft.mcProfiler.startSection("drawPlayerHead");
             if (drawPlayerHeads)
                 minX = drawPlayerHead(minX, minY, cell);
